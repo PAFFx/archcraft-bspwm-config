@@ -38,11 +38,11 @@ wdir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 wallpaper="$wdir/wallpaper"
 
 # Polybar
-polybar_font='Iosevka Nerd Font:size=10;3'
+polybar_font='JetBrainsMono Nerd Font:size=10;3'
 
 # Rofi
 # rofi_font='Iosevka 10'
-rofi_font='Iosevka 10'
+rofi_font='JetBrainsMono Nerd Font 10'
 rofi_icon='Papirus-Apps'
 
 # Terminal
@@ -64,7 +64,7 @@ dunst_width='300'
 dunst_height='80'
 dunst_offset='10x44'
 dunst_origin='top-right'
-dunst_font='Iosevka Custom 9'
+dunst_font='JetBrainsMono Nerd Font 9'
 dunst_border='1'
 dunst_separator='1'
 
