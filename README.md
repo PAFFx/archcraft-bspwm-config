@@ -1,3 +1,3 @@
 # archcraft-bspwm-config
 
-- apply theme to apply the changes(default key: super + t)
+- apply theme to see the changes ( default key: super + t ).
