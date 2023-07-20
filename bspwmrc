@@ -82,7 +82,7 @@ bspc rule -a Xfce4-terminal desktop='^1' follow=on focus=on
 # bspc rule -a google-chrome.desktop desktop='^2' follow=on focus=on
 
 ## 3 > files (always open file manager on workspace-3)
-declare -a files=(Pcmanfm Thunar qBittorrent)
+# declare -a files=(Pcmanfm Thunar qBittorrent)
 # for i in ${files[@]}; do
 #    bspc rule -a $i desktop='^3' follow=on focus=on; done
 
