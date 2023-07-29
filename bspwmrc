@@ -154,8 +154,10 @@ xfce4-power-manager &
 # Fix cursor
 xsetroot -cursor_name left_ptr
 
-# Restore wallpaper
+# Restore wallpaper and layout
 # bash ~/.fehbg
+zsh $HOME/.screenlayout/mylayout.sh &
+zsh $HOME/.fehbg
 nitrogen --restore
 
 # Start mpd
