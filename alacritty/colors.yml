@@ -3,9 +3,9 @@ colors:
   # Default colors
   primary:
     # gundam BG
-    # background: '#222831'
+    background: "#222831"
     # power + kobeni BG
-    background: "#2e2520"
+    # background: "#2e2520"
     foreground: "#DDDDDD"
 
   # Normal colors
