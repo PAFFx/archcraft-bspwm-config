@@ -10,6 +10,7 @@
 # color0='#263640'
 # color1='#ec7875'
 background='#222831'
+background_transparent='#ec222831'
 foreground='#DDDDDD'
 color0="#30475e"
 color1='#F05454'
