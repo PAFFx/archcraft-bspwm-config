@@ -4,4 +4,5 @@
 
 * {
     font: "JetBrainsMono Nerd Font 10";
+    icon-font: "JetBrainsMono Nerd Font 40";
 }
