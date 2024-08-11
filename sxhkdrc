@@ -37,8 +37,8 @@ super + shift + {f,w,e}
 	{thunar,firefox,geany}
 
 # Terminal Apps
-ctrl + alt + {v,r,h}
-	alacritty --config-file ~/.config/bspwm/alacritty/alacritty.yml -e {vim,ranger,htop}
+ctrl + alt + {v,r}
+	alacritty --config-file ~/.config/bspwm/alacritty/alacritty.yml -e {vim,ranger}
 
 # Color Picker
 super + p
@@ -49,8 +49,8 @@ ctrl + alt + m
 	bspmusic
 
 # Lockscreen
-ctrl + alt + l
-    betterlockscreen --lock
+#ctrl + alt + l
+#    betterlockscreen --lock
 
 ##---------- System Keys ----------##
 
@@ -93,8 +93,8 @@ XF86Audio{Next,Prev,Play,Stop}
 ##---------- Bspwm ----------##
 
 # Hide/Unhide Window
-super + shift + h
-	bspwinmask
+#super + shift + h
+	#bspwinmask
 
 # Close App
 super + {_,shift + }c
@@ -113,7 +113,7 @@ super + Escape
 	pkill -USR1 -x sxhkd
 
 # Switch workspace
-ctrl + alt + {Left,Right}
+ctrl + alt + {h, l}
 	bspc desktop -f {prev.local,next.local}
 
 # Switch workspace or Send focused Node to another workspace
@@ -121,40 +121,35 @@ super + {_,shift + }{1-8}
 	bspc {desktop -f,node -d} '^{1-8}' '--follow'
 
 # Send focused Node to workspace directionally
-super + ctrl + shift + {Left,Right}
+super + ctrl + shift + {h, l}
 	bspc node -d {prev,next} '--follow'
 
 # Change focus of the Node or Swap Nodes
-super + {_,shift + }{Left,Down,Up,Right}
+super + {_,shift + }{h,j,k,l}
 	bspc node -{f,s} {west,south,north,east}
 
-# Move floating windows
-super + alt + shift + {Left,Down,Up,Right}
-	bspc node -v {-20 0,0 20,0 -20,20 0}
-
-# Expanding windows
-super + control + {Left,Right,Up,Down}
-	bspc node -z {left -20 0,right 20 0,top 0 -20,bottom 0 20}
-	
-# Shrinking windows
-super + alt + {Left,Right,Up,Down}
-	bspc node -z {left 20 0,right -20 0,top 0 20,bottom 0 -20}
+# expand/contract a window 
+super + control + {h,j,k,l}
+  bspc node -z {left -20 0 || bspc node -z right -20 0, \
+                bottom 0 20 || bspc node -z top 0 20,\
+                top 0 -20 || bspc node -z bottom 0 -20,\
+                right 20 0 || bspc node -z left 20 0}	
 
 # Split horizontal, vertical or cancel
-super + {h,v,q}
-	bspc node -p {east,south,cancel}
+#super + {h,v,q}
+#	bspc node -p {east,south,cancel}
 
 # Preselect the ratio
 super + ctrl + {1-9}
 	bspc node -o 0.{1-9}
 
 # Toggle Layout (Tiled/Monocle)
-super + l
+super + f
 	bspc desktop -l next
 
 # Toggle Fullscreen
-super + f
-    bspc node -t "~"fullscreen
+#super + f
+#    bspc node -t "~"fullscreen
 
 # Toggle beetwen floating & tiled
 super + space

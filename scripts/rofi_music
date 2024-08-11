@@ -30,7 +30,6 @@ Control="MPD"
 # [ -n "$(pgrep audacious)" ] && Control="audacious"
 # [ -n "$(pgrep clementine)" ] && Control="clementine"
 # [ -n "$(pgrep strawberry)" ] && Control="strawberry"
-
 # Saves Cover here for rofi
 Cover=/tmp/cover.png
 # mpd music directory (to get cover)
@@ -47,14 +46,19 @@ terminal=kitty
 # ┴  ┴─┘┴ ┴ ┴ └─┘┴└─└─┘ ┴ ┴─┘  └─┘└─┘┴└─┴┴   ┴ └─┘
 
 musicmetadata() {
-
 player=""
 
 albumart="$(playerctl --player=$Control metadata mpris:artUrl | sed -e 's/open.spotify.com/i.scdn.co/g')"
 [ $(playerctl --player=$Control metadata mpris:artUrl) ] && curl -s "$albumart" --output $Cover || cp $bkpCover $Cover 
 
-title=$(playerctl --player=$Control metadata --format {{title}} | cut -c1-35)
+title=$(playerctl --player=$Control metadata --format {{title}})
 title=${title:-Play Something}
+
+if [ ${#title} -le 50 ]; then
+    title="$title"
+else
+    title="${title:0:47}..."
+fi
 
 artist=$(playerctl --player=$Control metadata --format {{artist}} | cut -c1-35)
 artist=${artist:-Artist}
