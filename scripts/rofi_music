@@ -53,14 +53,23 @@ terminal=kitty
 # ├─┘│  ├─┤└┬┘├┤ ├┬┘│   │ │    └─┐│  ├┬┘│├─┘ │ └─┐
 # ┴  ┴─┘┴ ┴ ┴ └─┘┴└─└─┘ ┴ ┴─┘  └─┘└─┘┴└─┴┴   ┴ └─┘
 
+sanitize_filename() {
+    local filename="$1"
+    # Replace unallowed characters with underscores
+    echo "$filename" | sed -e 's/[\/:*?"<>|]/_/g'
+}
+
 musicmetadata() {
 player=""
 
 title=$(playerctl --player=$Control metadata --format {{title}})
 artist=$(playerctl --player=$Control metadata --format {{artist}})
 albumart="$(playerctl --player=$Control metadata mpris:artUrl | sed -e 's/open.spotify.com/i.scdn.co/g')"
-filename="$CoverDir/${title// /_}-${artist// /_}.png"
+sanitized_title=$(sanitize_filename "$title")
+sanitized_artist=$(sanitize_filename "$artist")
+filename="$CoverDir/${sanitized_title}-${sanitized_artist}.png"
 
+touch $Cover
 # Check if the cover art already exists
 if [ -f "$filename" ]; then
     cp "$filename" $Cover
