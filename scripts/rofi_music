@@ -27,7 +27,7 @@ STYLE="adaptive"
 RASI="$DIR/themes/$STYLE/rofi/music.rasi"
 
 # uncomment your music players below, 
-Control="MPD"
+Control="spotify"
 [ -n "$(pgrep spotify)" ] && Control="spotify"
 # [ -n "$(pgrep rhythmbox)" ] && Control="rhythmbox"
 # [ -n "$(pgrep audacious)" ] && Control="audacious"
