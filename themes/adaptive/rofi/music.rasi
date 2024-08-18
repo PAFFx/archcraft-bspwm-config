@@ -39,7 +39,7 @@ prompt {
 
 inputbar {
   children:		[ prompt ];
-  background-image:	url("/tmp/cover.png");
+  background-image:	url("/tmp/cover/cover.png");
   expand:		false;
   border-radius:	8px 8px 0px 0px;
   padding:		290px 15px 15px 15px;

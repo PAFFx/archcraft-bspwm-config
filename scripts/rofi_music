@@ -34,7 +34,12 @@ Control="MPD"
 # [ -n "$(pgrep clementine)" ] && Control="clementine"
 # [ -n "$(pgrep strawberry)" ] && Control="strawberry"
 # Saves Cover here for rofi
-Cover=/tmp/cover.png
+CoverDir=/tmp/cover
+if [ ! -d "$CoverDir" ]; then
+    # Directory does not exist, so create it
+    mkdir -p "$CoverDir"
+fi
+Cover="$CoverDir/cover.png"
 # mpd music directory (to get cover)
 mpddir=~/media/Music
 # if cover not found in metadata use this instead
@@ -51,10 +56,30 @@ terminal=kitty
 musicmetadata() {
 player=""
 
-albumart="$(playerctl --player=$Control metadata mpris:artUrl | sed -e 's/open.spotify.com/i.scdn.co/g')"
-[ $(playerctl --player=$Control metadata mpris:artUrl) ] && curl -s "$albumart" --output $Cover || cp $bkpCover $Cover 
-
 title=$(playerctl --player=$Control metadata --format {{title}})
+artist=$(playerctl --player=$Control metadata --format {{artist}})
+albumart="$(playerctl --player=$Control metadata mpris:artUrl | sed -e 's/open.spotify.com/i.scdn.co/g')"
+filename="$CoverDir/${title// /_}-${artist// /_}.png"
+
+# Check if the cover art already exists
+if [ -f "$filename" ]; then
+    cp "$filename" $Cover
+else
+    # Try to download the cover art
+    if [ $(playerctl --player=$Control metadata mpris:artUrl) ]; then
+        curl -s "$albumart" --output "$filename"
+        if [ $? -eq 0 ]; then
+            cp "$filename" $Cover
+        else
+            # Fallback to the backup cover
+            cp $bkpCover $Cover
+        fi
+    else
+        # Fallback to the backup cover
+        cp $bkpCover $Cover
+    fi
+fi
+
 title=${title:-Play Something}
 
 if [ ${#title} -le 50 ]; then
@@ -63,7 +88,7 @@ else
     title="${title:0:47}..."
 fi
 
-artist=$(playerctl --player=$Control metadata --format {{artist}} | cut -c1-35)
+artist=$(artist) | cut -c1-35
 artist=${artist:-Artist}
 
 album=$(playerctl --player=$Control metadata --format {{album}} | cut -c1-35)
