@@ -1,5 +1,5 @@
-import = ["/home/paff/.config/bspwm/alacritty/colors.toml", "/home/paff/.config/bspwm/alacritty/fonts.toml"]
-live_config_reload = true
+general.import = ["/home/paff/.config/bspwm/alacritty/colors.toml", "/home/paff/.config/bspwm/alacritty/fonts.toml"]
+general.live_config_reload = true
 
 [colors.cursor]
 cursor = "#fb4c5d"
