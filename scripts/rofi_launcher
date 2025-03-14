@@ -7,6 +7,9 @@ DIR="$HOME/.config/bspwm"
 STYLE="adaptive"
 RASI="$DIR/themes/$STYLE/rofi/launcher.rasi"
 
+#cursor
+export XDG_DATA_DIRS=/usr/share:/usr/local/share
+
 # Run
 rofi \
     -show drun \
