@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-## Copyright (C) 2020-2023 Aditya Shakya <adi1090x@gmail.com>
+## Copyright (C) 2020-2025 Aditya Shakya <adi1090x@gmail.com>
 
 # Import Current Theme
 DIR="$HOME/.config/bspwm"
@@ -57,6 +57,8 @@ confirm_cmd() {
 	rofi -dmenu \
 		-p 'Confirmation' \
 		-mesg 'Are you Sure?' \
+		-selected-row 1 \
+		-no-click-to-exit \
 		-theme ${CNFR}
 }
 
