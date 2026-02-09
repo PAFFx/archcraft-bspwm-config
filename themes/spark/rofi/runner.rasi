@@ -1,15 +1,15 @@
 /**
- * Copyright (C) 2020-2023 Aditya Shakya <adi1090x@gmail.com>
+ * Copyright (C) 2020-2025 Aditya Shakya <adi1090x@gmail.com>
  **/
 
 /*****----- Configuration -----*****/
 configuration {
 	modi:                       "run";
     show-icons:                 true;
-    display-drun:               " Apps";
-    display-run:                " Run";
-    display-filebrowser:        " Files";
-    display-window:             " Windows";
+    display-drun:               " Apps";
+    display-run:                " Run";
+    display-filebrowser:        " Files";
+    display-window:             " Windows";
 	drun-display-format:        "{name}";
 	window-format:              "{w} · {c} · {t}";
 }
@@ -110,7 +110,7 @@ prompt {
 textbox-prompt-colon {
     enabled:                     true;
     expand:                      false;
-    str:                         "";
+    str:                         "";
     background-color:            inherit;
     text-color:                  inherit;
 }
