@@ -84,6 +84,6 @@ bspwm_fbc="$focus"
 bspwm_nbc="$background"
 bspwm_abc="$color5"
 bspwm_pfc="$color2"
-bspwm_border='3'
+bspwm_border='2'
 bspwm_gap='10'
 bspwm_sratio='0.50'
