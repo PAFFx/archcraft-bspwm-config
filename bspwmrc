@@ -70,8 +70,8 @@ bspc wm --adopt-orphans
 ## Window rules ----------------------------------------------#
 
 # remove all rules first
+#
 bspc rule -r *:*
-bspc rule -a '*' state=floating border=off
 ## 1 > terminal (always open terminal on workspace-1)
 bspc rule -a Alacritty desktop='^1' follow=on focus=on
 bspc rule -a kitty desktop='^1' follow=on focus=on
