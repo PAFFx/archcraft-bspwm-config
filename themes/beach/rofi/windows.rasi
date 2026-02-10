@@ -1,15 +1,15 @@
 /**
- * Copyright (C) 2020-2025 Aditya Shakya <adi1090x@gmail.com>
+ * Copyright (C) 2020-2023 Aditya Shakya <adi1090x@gmail.com>
  **/
 
 /*****----- Configuration -----*****/
 configuration {
 	modi:                       "window";
     show-icons:                 true;
-    display-drun:               "";
-    display-run:                "";
-    display-filebrowser:        "";
-    display-window:             "";
+    display-drun:               "";
+    display-run:                "";
+    display-filebrowser:        "";
+    display-window:             "";
 	drun-display-format:        "{name} [<span weight='light' size='small'><i>({generic})</i></span>]";
 	window-format:              "{c} · {t}";
 }

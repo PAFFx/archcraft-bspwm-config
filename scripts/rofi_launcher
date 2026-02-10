@@ -1,11 +1,14 @@
 #!/usr/bin/env bash
 
-## Copyright (C) 2020-2025 Aditya Shakya <adi1090x@gmail.com>
+## Copyright (C) 2020-2023 Aditya Shakya <adi1090x@gmail.com>
 
 # Import Current Theme
 DIR="$HOME/.config/bspwm"
 STYLE="adaptive"
 RASI="$DIR/themes/$STYLE/rofi/launcher.rasi"
+
+#cursor
+export XDG_DATA_DIRS=/usr/share:/usr/local/share
 
 # Run
 rofi \

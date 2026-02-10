@@ -1,12 +1,12 @@
 /**
- * Copyright (C) 2020-2025 Aditya Shakya <adi1090x@gmail.com>
+ * Copyright (C) 2020-2023 Aditya Shakya <adi1090x@gmail.com>
  **/
 
 /*****----- Configuration -----*****/
 configuration {
 	modi:                       "drun";
     show-icons:                 true;
-    display-drun:               "";
+    display-drun:               "";
 	drun-display-format:        "{name}";
 }
 
