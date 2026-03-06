@@ -116,6 +116,14 @@ super + Escape
 ctrl + alt + {h, l}
 	bspc desktop -f {prev.local,next.local}
 
+# Switch active monitor
+super + {comma,period}
+	bspc monitor -f {prev,next}
+
+# Send focused node to another monitor and follow it
+super + shift + {comma,period}
+	bspc node -m {prev,next} --follow
+
 # Switch workspace or Send focused Node to another workspace
 super + {_,shift + }{1-8}
 	bspc {desktop -f,node -d} '^{1-8}' '--follow'

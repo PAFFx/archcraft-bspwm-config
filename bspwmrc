@@ -31,17 +31,13 @@ BSPWM_SRATIO='0.50'
 
 ## Configurations --------------------------------------------#
 
-## Manager Workspaces
+## Manage workspaces for any number of monitors.
+## Keep original icon-based desktop labels.
 workspaces() {
-	name=1
-	for monitor in `bspc query -M`; do
-		# bspc monitor ${monitor} -n "$name" -d '1' '2' '3' '4' '5' '6' '7' '8'
-		# bspc monitor ${monitor} -n "$name" -d 'A' 'B' 'C' 'D' 'E' 'F' 'G' 'H'
-		#bspc monitor ${monitor} -n "$name" -d 'I' 'II' 'III' 'IV' 'V' 'VI' 'VII' 'VIII'
-		# bspc monitor ${monitor} -n "$name" -d '' '' '' '' '' '' '' ''
-		# bspc monitor ${monitor} -n "$name" -d '' '' '' '' '' '' '' ''
-		bspc monitor ${monitor} -n "$name" -d '' '' '' '' '' '' '' ''
-		let name++
+	local monitor
+
+	for monitor in $(bspc query -M --names); do
+		bspc monitor "$monitor" -d '' '' '' '' '' '' '' ''
 	done
 }
 workspaces
@@ -169,4 +165,3 @@ bspbar
 bspcomp
 bspdunst
 bspfloat &
-
