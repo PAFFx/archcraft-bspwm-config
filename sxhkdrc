@@ -126,11 +126,11 @@ super + shift + {comma,period}
 
 # Switch workspace or Send focused Node to another workspace
 super + {_,shift + }{1-8}
-	bspc {desktop -f,node -d} '^{1-8}' '--follow'
+	bspc {desktop -f,node -d} "$(bspc query -D -m focused | sed -n '{1-8}p')" --follow
 
 # Send focused Node to workspace directionally
 super + ctrl + shift + {h, l}
-	bspc node -d {prev,next} '--follow'
+	bspc node -d {prev,next}.local --follow
 
 # Change focus of the Node or Swap Nodes
 super + {_,shift + }{h,j,k,l}
