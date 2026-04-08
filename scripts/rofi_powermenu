@@ -41,6 +41,7 @@ fi
 # Rofi CMD
 rofi_cmd() {
 	rofi -dmenu \
+		-m -4 \
 		-p "$prompt" \
 		-mesg "$mesg" \
 		-markup-rows \
@@ -55,6 +56,7 @@ run_rofi() {
 # Confirmation CMD
 confirm_cmd() {
 	rofi -dmenu \
+		-m -4 \
 		-p 'Confirmation' \
 		-mesg 'Are you Sure?' \
 		-theme ${CNFR}

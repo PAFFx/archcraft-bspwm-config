@@ -12,6 +12,7 @@ export XDG_DATA_DIRS=/usr/share:/usr/local/share
 
 # Run
 rofi \
+    -m -4 \
     -show drun \
 	-kb-cancel Alt-F1 \
 	-theme ${RASI}

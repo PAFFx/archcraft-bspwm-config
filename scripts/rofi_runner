@@ -9,5 +9,6 @@ RASI="$DIR/themes/$STYLE/rofi/runner.rasi"
 
 # Run
 rofi \
+    -m -4 \
     -show run \
 	-theme ${RASI}

@@ -30,6 +30,7 @@ fi
 # Rofi CMD
 rofi_cmd() {
 	rofi -dmenu \
+		-m -4 \
 		-p "$prompt" \
 		-mesg "$mesg" \
 		-markup-rows \

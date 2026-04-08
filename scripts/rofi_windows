@@ -9,5 +9,6 @@ RASI="$DIR/themes/$STYLE/rofi/windows.rasi"
 
 # Run
 rofi \
+    -m -4 \
     -show window \
 	-theme ${RASI}

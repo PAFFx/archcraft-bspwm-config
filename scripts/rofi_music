@@ -178,7 +178,7 @@ next="怜"
 lyrics=""
 options="$player\n$previous\n$icon\n$next\n$lyrics"
 
-rofi=$(printf $options | rofi -theme $RASI -dmenu -i -selected-row 2 -hover-select -p "<big><b>$title</b></big>
+rofi=$(printf $options | rofi -m -4 -theme $RASI -dmenu -i -selected-row 2 -hover-select -p "<big><b>$title</b></big>
 $artist")
 
 ## actions

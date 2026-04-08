@@ -17,6 +17,7 @@ mesg="<b>Available Themes</b> : `cd $DIR/themes && ls -d */ | cut -d '/' -f1 | w
 # Rofi CMD
 rofi_cmd() {
 	rofi -dmenu \
+		-m -4 \
 		-p "$prompt" \
 		-mesg "$mesg" \
 		-sep '|' \
