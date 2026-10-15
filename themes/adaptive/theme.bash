@@ -56,6 +56,7 @@ geany_font='JetBrains Mono 10'
 
 # Appearance
 gtk_font='Noto Sans 9'
+gtk_colors='default' # 'prefer-dark' for dark themes
 gtk_theme='Adapta' # default 'Adapta-Nokto'
 icon_theme='Luv-Folders-Dark'
 cursor_theme='Vimix'

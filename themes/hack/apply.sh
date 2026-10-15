@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-## Copyright (C) 2020-2023 Aditya Shakya <adi1090x@gmail.com>
+## Copyright (C) 2020-2026 Aditya Shakya <adi1090x@gmail.com>
 ##
 ## Script To Apply Themes
 
@@ -23,7 +23,7 @@ PATH_ROFI="$PATH_BSPWM/themes/$THEME/rofi"
 
 ## Wallpaper ---------------------------------
 apply_wallpaper() {
-	feh --bg-fill "$wallpaper"
+	sed -i -e "s#WALLPAPER=.*#WALLPAPER='$wallpaper'#g" ${PATH_BSPWM}/themes/wallpaper.sh
 }
 
 ## Polybar -----------------------------------
@@ -69,6 +69,13 @@ apply_polybar() {
 
 # Rofi --------------------------------------
 apply_rofi() {
+	border_color="`pastel color $accent | pastel format rgb-float | tr -d '[:alpha:]','(',')' | sed 's/ /,/g'`"
+
+	# modify screenshots scripts
+	sed -i -e "s/border=.*/border='$border_color'/g" \
+		${PATH_BSPWM}/scripts/rofi_screenshot \
+		${PATH_BSPWM}/scripts/bspscreenshot
+
 	# modify rofi scripts
 	sed -i -e "s/STYLE=.*/STYLE=\"$THEME\"/g" \
 		${PATH_BSPWM}/scripts/rofi_askpass \
@@ -105,49 +112,85 @@ apply_rofi() {
 
 # Network Menu ------------------------------
 apply_netmenu() {
-	if [[ -f "$PATH_CONF"/networkmanager-dmenu/nmd.ini ]]; then
-		sed -i -e "s#dmenu_command = .*#dmenu_command = rofi -dmenu -theme $PATH_ROFI/networkmenu.rasi#g" ${PATH_CONF}/networkmanager-dmenu/nmd.ini
+	nm_cfg="$PATH_BSPWM/themes/networkmenu_config.ini"
+	if [[ -f "$nm_cfg" ]]; then
+		sed -i -e "s#dmenu_command = .*#dmenu_command = rofi -dmenu -theme $PATH_ROFI/networkmenu.rasi#g" "$nm_cfg"
 	fi
 }
 
 # Terminal ----------------------------------
 apply_terminal() {
-	# alacritty : fonts
-	sed -i ${PATH_TERM}/fonts.yml \
-		-e "s/family: .*/family: \"$terminal_font_name\"/g" \
-		-e "s/size: .*/size: $terminal_font_size/g"
+	if [[ -f "$PATH_TERM/fonts.toml" && -f "$PATH_TERM/colors.toml" ]]; then
+		# alacritty : fonts
+		sed -i ${PATH_TERM}/fonts.toml \
+			-e "s/family = .*/family = \"$terminal_font_name\"/g" \
+			-e "s/size = .*/size = $terminal_font_size/g"
 
-	# alacritty : colors
-	cat > ${PATH_TERM}/colors.yml <<- _EOF_
-		## Colors configuration
-		colors:
-		  # Default colors
-		  primary:
-		    background: '${background}'
-		    foreground: '${foreground}'
+		# alacritty : colors
+		cat > ${PATH_TERM}/colors.toml <<- _EOF_
+			## Colors configuration
+			[colors.primary]
+			background = "${background}"
+			foreground = "${foreground}"
+			
+			[colors.normal]
+			black   = "${color0}"
+			red     = "${color1}"
+			green   = "${color2}"
+			yellow  = "${color3}"
+			blue    = "${color4}"
+			magenta = "${color5}"
+			cyan    = "${color6}"
+			white   = "${color7}"
+			
+			[colors.bright]
+			black   = "${color8}"
+			red     = "${color9}"
+			green   = "${color10}"
+			yellow  = "${color11}"
+			blue    = "${color12}"
+			magenta = "${color13}"
+			cyan    = "${color14}"
+			white   = "${color15}"
+		_EOF_
+	fi
 
-		  # Normal colors
-		  normal:
-		    black:   '${color0}'
-		    red:     '${color1}'
-		    green:   '${color2}'
-		    yellow:  '${color3}'
-		    blue:    '${color4}'
-		    magenta: '${color5}'
-		    cyan:    '${color6}'
-		    white:   '${color7}'
+	if [[ -f "$PATH_BSPWM/kitty/fonts.conf" && -f "$PATH_BSPWM/kitty/colors.conf" ]]; then
+		# kitty : fonts
+		sed -i ${PATH_BSPWM}/kitty/fonts.conf \
+			-e "/#-fn-start/,/#-fn-end/c\#-fn-start\nfont_family $terminal_font_name\nbold_font $terminal_font_name\nitalic_font $terminal_font_name\nbold_italic_font $terminal_font_name\n#-fn-end" \
+			-e "s/font_size .*/font_size $terminal_font_size/g"
 
-		  # Bright colors
-		  bright:
-		    black:   '${color8}'
-		    red:     '${color9}'
-		    green:   '${color10}'
-		    yellow:  '${color11}'
-		    blue:    '${color12}'
-		    magenta: '${color13}'
-		    cyan:    '${color14}'
-		    white:   '${color15}'
-	_EOF_
+		# kitty : colors
+		cat > ${PATH_BSPWM}/kitty/colors.conf <<- _EOF_
+			## Colors configuration
+			background ${background}
+			foreground ${foreground}
+			selection_background ${foreground}
+			selection_foreground ${background}
+			cursor ${foreground}
+			
+			color0 ${color0}
+			color8 ${color8}
+			color1 ${color1}
+			color9 ${color9}
+			color2 ${color2}
+			color10 ${color10}
+			color3 ${color3}
+			color11 ${color11}
+			color4 ${color4}
+			color12 ${color12}
+			color5 ${color5}
+			color13 ${color13}
+			color6 ${color6}
+			color14 ${color14}
+			color7 ${color7}
+			color15 ${color15}
+		_EOF_
+
+		# reload kitty config
+		kill -SIGUSR1 $(pidof kitty)
+	fi
 }
 
 # Geany -------------------------------------
@@ -184,6 +227,10 @@ apply_appearance() {
 	if [[ -f "$HOME"/.icons/default/index.theme ]]; then
 		sed -i -e "s/Inherits=.*/Inherits=$cursor_theme/g" "$HOME"/.icons/default/index.theme
 	fi	
+
+	# set color scheme for gnome apps
+	gsettings set org.gnome.desktop.interface color-scheme "'$gtk_colors'"
+	gsettings set org.x.apps.portal color-scheme "'$gtk_colors'"
 }
 
 # Dunst -------------------------------------
@@ -229,7 +276,7 @@ apply_compositor() {
 	# modify picom config
 	sed -i "$picom_cfg" \
 		-e "s/backend = .*/backend = \"$picom_backend\";/g" \
-		-e "s/corner-radius = .*/corner-radius = $picom_corner;/g" \
+		-e "/#-cr-start/,/#-cr-end/c\#-cr-start\ncorner-radius = $picom_corner;\n#-cr-end" \
 		-e "s/shadow-radius = .*/shadow-radius = $picom_shadow_r;/g" \
 		-e "s/shadow-opacity = .*/shadow-opacity = $picom_shadow_o;/g" \
 		-e "s/shadow-offset-x = .*/shadow-offset-x = $picom_shadow_x;/g" \

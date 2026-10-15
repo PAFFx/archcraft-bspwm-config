@@ -1,4 +1,4 @@
-## Copyright (C) 2020-2023 Aditya Shakya <adi1090x@gmail.com>
+## Copyright (C) 2020-2026 Aditya Shakya <adi1090x@gmail.com>
 
 [global]
 monitor = 0
@@ -6,7 +6,7 @@ follow = mouse
 width = 300
 height = 80
 origin = top-right
-offset = 10x44
+offset = 10x42
 corner_radius = 0
 scale = 0
 notification_limit = 0
@@ -54,18 +54,18 @@ class = Dunst
 
 [urgency_low]
 timeout = 2
-background = "#222831"
-foreground = "#DDDDDD"
-frame_color = "#414d5e"
+background = "#2E3440"
+foreground = "#D8DEE9"
+frame_color = "#81A1C1"
 
 [urgency_normal]
 timeout = 5
-background = "#222831"
-foreground = "#DDDDDD"
-frame_color = "#414d5e"
+background = "#2E3440"
+foreground = "#D8DEE9"
+frame_color = "#81A1C1"
 
 [urgency_critical]
 timeout = 0
-background = "#222831"
-foreground = "#F05454"
-frame_color = "#F05454"
+background = "#2E3440"
+foreground = "#BF616A"
+frame_color = "#BF616A"

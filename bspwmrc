@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-## Copyright (C) 2020-2023 Aditya Shakya <adi1090x@gmail.com>
+## Copyright (C) 2020-2026 Aditya Shakya <adi1090x@gmail.com>
 ##
 ## BSPWM config file for Archcraft
 
@@ -14,6 +14,9 @@ export PATH="${PATH}:$BSPDIR/scripts"
 export XDG_CURRENT_DESKTOP='bspwm'
 dbus-update-activation-environment --systemd --all
 
+## Disable CSD
+export LD_PRELOAD='/usr/lib/libgtk-nocsd.so'
+
 ## Run java applications without issues
 export _JAVA_AWT_WM_NONREPARENTING=1
 #wmname LG3D
@@ -21,13 +24,13 @@ export _JAVA_AWT_WM_NONREPARENTING=1
 ## Current theme ---------------------------------------------#
 
 ## Bspwm colors
-BSPWM_FBC='#f05454'
-BSPWM_NBC='#222831'
-BSPWM_ABC='#ba68c8'
-BSPWM_PFC='#61c766'
+BSPWM_FBC='#81A1C1'
+BSPWM_NBC='#2E3440'
+BSPWM_ABC='#B48EAD'
+BSPWM_PFC='#A3BE8C'
 
 ## Bspwm appearance
-BSPWM_BORDER='2'
+BSPWM_BORDER='1'
 BSPWM_GAP='10'
 BSPWM_SRATIO='0.50'
 
@@ -117,8 +120,8 @@ for i in ${settings[@]}; do
    bspc rule -a $i desktop='^8' state=floating follow=on focus=on; done
 
 ## Always Floating Apps
-declare -a floating=(alacritty-float Pcmanfm Thunar Onboard Yad 'Firefox:Places' \
-Viewnior feh Nm-connection-editor)
+declare -a floating=(alacritty-float kitty-float Pcmanfm Thunar Onboard Yad 'Firefox:Places' \
+Viewnior feh Nm-connection-editor Catfish calamares Calamares archcraft-help archcraft-welcome)
 for i in ${floating[@]}; do
    bspc rule -a $i state=floating follow=on focus=on; done
 
@@ -140,8 +143,6 @@ fi
 
 # Lauch keybindings daemon
 sxhkd -c "$BSPDIR"/sxhkdrc &
-setxkbmap -option grp:alt_shift_toggle us,th &
-
 
 # Enable Super Keys For Menu
 ksuperkey -e 'Super_L=Alt_L|F1' &
