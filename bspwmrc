@@ -143,6 +143,7 @@ fi
 
 # Lauch keybindings daemon
 sxhkd -c "$BSPDIR"/sxhkdrc &
+setxkbmap -option grp:alt_shift_toggle us,th &
 
 # Enable Super Keys For Menu
 ksuperkey -e 'Super_L=Alt_L|F1' &
