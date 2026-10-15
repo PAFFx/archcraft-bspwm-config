@@ -1,1 +1,0 @@
-# archcraft-bspwm-config

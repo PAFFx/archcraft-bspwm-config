@@ -1,18 +1,14 @@
 # ------------------------------------------------------------------------------
-# Copyright (C) 2020-2023 Aditya Shakya <adi1090x@gmail.com>
+# Copyright (C) 2020-2026 Aditya Shakya <adi1090x@gmail.com>
 #
 # Adaptive Theme
 # ------------------------------------------------------------------------------
 
 # Colors
-# background='#222d32'
-# foreground='#c4c7c5'
-# color0='#263640'
-# color1='#ec7875'
-background='#222831'
-foreground='#DDDDDD'
-color0="#30475e"
-color1='#F05454'
+background='#222d32'
+foreground='#c4c7c5'
+color0='#263640'
+color1='#ec7875'
 color2='#61c766'
 color3='#fdd835'
 color4='#42a5f5'
@@ -27,9 +23,8 @@ color12='#51b4ff'
 color13='#c979d7'
 color14='#5cdff0'
 color15='#fdf6e3'
-accent='#00BCD4'
-focus='#f05454'
 
+accent='#00BCD4'
 light_value='0.15'
 dark_value='0.30'
 
@@ -38,23 +33,23 @@ wdir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 wallpaper="$wdir/wallpaper"
 
 # Polybar
-polybar_font='Iosevka Nerd Font:size=10;3'
+polybar_font='Iosevka:size=10;3'
 
 # Rofi
-# rofi_font='Iosevka 10'
 rofi_font='Iosevka 10'
-rofi_icon='Papirus-Apps'
+rofi_icon='Luv-Folders-Dark'
 
 # Terminal
 terminal_font_name='JetBrainsMono Nerd Font'
-terminal_font_size='10.5'
+terminal_font_size='10'
 
 # Geany
 geany_colors='adapta.conf'
-geany_font='JetBrains Mono 10'
+geany_font='JetBrainsMono Nerd Font 10'
 
 # Appearance
 gtk_font='Noto Sans 9'
+gtk_colors='prefer-dark'
 gtk_theme='Adapta-Nokto'
 icon_theme='Luv-Folders-Dark'
 cursor_theme='Vimix'
@@ -71,18 +66,18 @@ dunst_separator='1'
 # Picom
 picom_backend='glx'
 picom_corner='0'
-picom_shadow_r='14'
-picom_shadow_o='0.30'
-picom_shadow_x='-12'
-picom_shadow_y='-12'
+picom_shadow_r='20'
+picom_shadow_o='0.60'
+picom_shadow_x='-20'
+picom_shadow_y='-20'
 picom_blur_method='none'
 picom_blur_strength='0'
 
 # Bspwm
-bspwm_fbc="$focus"
+bspwm_fbc="$accent"
 bspwm_nbc="$background"
 bspwm_abc="$color5"
 bspwm_pfc="$color2"
-bspwm_border='2'
+bspwm_border='1'
 bspwm_gap='10'
 bspwm_sratio='0.50'
