@@ -11,7 +11,7 @@
 * {
   background-color: @background;
   text-color:       @foreground;
-  icon-font:        "JetBrainsMono Nerd Font 40";
+  icon-font:        "SymbolsNF 40";
 }
 
 
