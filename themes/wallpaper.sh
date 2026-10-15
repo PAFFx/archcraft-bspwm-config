@@ -4,7 +4,7 @@
 ##
 ## Apply wallpaper on bspwm startup
 
-WALLPAPER="$HOME/.config/bspwm/themes/default/wallpaper"
+WALLPAPER='/home/paff/.config/bspwm/themes/adaptive/wallpaper'
 
 ## For single monitor
 #hsetroot -root -cover "$WALLPAPER"

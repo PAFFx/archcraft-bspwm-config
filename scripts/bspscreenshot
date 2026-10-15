@@ -9,7 +9,7 @@ time=`date +%Y-%m-%d-%H-%M-%S`
 geometry=`xrandr | grep 'current' | head -n1 | cut -d',' -f2 | tr -d '[:blank:],current'`
 dir="`xdg-user-dir PICTURES`/Screenshots"
 file="Screenshot_${time}_${geometry}.png"
-border='0.506,0.631,0.756'
+border='0.000,0.735,0.832'
 
 # directory
 if [[ ! -d "$dir" ]]; then
