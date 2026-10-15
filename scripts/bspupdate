@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+
+## Pull the latest archcraft-bspwm (/etc/skel) into the `upstream` branch and merge it,
+## so local customizations survive via git's 3-way merge.
+## After `pacman -Syu` bumps archcraft-bspwm, just run: bspupdate
+
+set -euo pipefail
+cd "$(dirname "$(readlink -f "$0")")/.."
+
+SRC=/etc/skel/.config/bspwm
+VER=$(pacman -Q archcraft-bspwm | cut -d' ' -f2)
+
+[[ -z $(git status --porcelain) ]] || { echo "Commit or stash your changes first."; exit 1; }
+
+WT=$(mktemp -d)
+git worktree add -q "$WT" upstream
+trap 'git worktree remove --force "$WT"' EXIT
+
+rsync -a --delete --exclude .git "$SRC"/ "$WT"/
+git -C "$WT" add -A
+git -C "$WT" commit -qm "upstream: archcraft-bspwm $VER" || echo "upstream branch already at $VER"
+
+git merge --no-ff upstream -m "merge: upstream archcraft-bspwm $VER" \
+	|| { echo; echo "Resolve conflicts above, then: git commit"; exit 1; }
