@@ -49,7 +49,7 @@ listview {
   cycle:		true;
   layout:		horizontal;
   spacing:      20px;
-  padding:		10px 0px 10px 75px;
+  padding:		10px 0px 10px 128px;
   border-color: @background;
 }
 
