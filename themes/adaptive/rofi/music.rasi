@@ -1,80 +1,102 @@
 /**
  * Copyright (C) 2020-2023 Aditya Shakya <adi1090x@gmail.com>
+ *
+ * Mini player: square cover on the left, track info + controls on the right.
  **/
-
-/*****----- Configuration -----*****/
 
 /*****----- Global Properties -----*****/
 @import                          "shared/colors.rasi"
 @import                          "shared/fonts.rasi"
 
 * {
-  background-color: @background;
+  background-color: transparent;
   text-color:       @foreground;
-  icon-font:        "SymbolsNF 40";
+  icon-font:        "SymbolsNF 26";
 }
 
-
+/*****----- Window -----*****/
 window {
-  transparency:		"real";
+  transparency:     "real";
   location:         center;
   anchor:           center;
   fullscreen:       false;
-  width:		    600;
-  x-offset:         0px;
-  y-offset:         0px;
-  margin:           0px;
-  padding:          0px;
-  border:           transparent;
-  border-radius:    8px;
+  width:            560px;
+  height:           216px;   /* 180px cover + 2 x 18px padding */
+  border:           1px solid;
+  border-color:     @background-alt;
+  border-radius:    16px;
+  background-color: @background;
   cursor:           "default";
 }
 
-prompt {
-  padding:		15px;
-  border-radius:	10px;
-  expand: false;
-  markup: true;
+mainbox {
+  orientation:      horizontal;
+  children:         [ cover, details ];
+  spacing:          20px;
+  padding:          18px;
+  background-color: @background;
 }
 
-inputbar {
-  children:		[ prompt ];
-  background-image:	url("/tmp/cover/cover.png");
-  expand:		false;
-  border-radius:	8px 8px 0px 0px;
-  padding:		290px 15px 15px 15px;
+/*****----- Cover -----*****/
+cover {
+  expand:           false;
+  width:            180px;
+  border-radius:    12px;
+  background-image: url("/tmp/cover/cover.png", both);
 }
 
+/*****----- Track info -----*****/
+details {
+  orientation:      vertical;
+  children:         [ message, spacer, listview ];
+  spacing:          0px;
+}
+
+message {
+  padding:          6px 0px 0px 0px;
+}
+
+textbox {
+  markup:           true;
+  font:             "JetBrainsMono Nerd Font 12";   /* one size: rofi clips mixed-size markup */
+}
+
+spacer {
+  expand:           true;
+}
+
+/*****----- Controls -----*****/
 listview {
-  cycle:		true;
-  layout:		horizontal;
-  spacing:      20px;
-  padding:		10px 0px 10px 128px;
-  border-color: @background;
+  layout:           vertical;
+  columns:          4;
+  lines:            1;
+  cycle:            true;
+  fixed-height:     true;
+  expand:           false;
+  spacing:          10px;
+  padding:          0px 0px 4px 0px;
 }
-
-mainbox { 
-    children: [ inputbar, listview ]; }
 
 element {
-  cursor: pointer;
-  border-radius:	8px;
-  background-color: inherit;
+  cursor:           pointer;
+  border-radius:    100%;
+  padding:          5px 0px 19px 0px;   /* icon font sits low; shift glyph up 7px */
+  margin:           0px 7px;            /* ~74px column -> 59px circle */
 }
 
 element-text {
-  margin:		5px 18px 5px 18px;
-  padding:		0px 0px 0px 0px;
-  font:			@icon-font;
-  background-color:	transparent;
-  text-color:		inherit; 
+  font:             @icon-font;
+  horizontal-align: 0.5;
+  vertical-align:   0.5;
+  text-color:       inherit;
+  cursor:           inherit;
 }
 
 element selected {
-  background-color:	@selected;
-  text-color:		inherit;
+  background-color: @selected;
+  text-color:       @background;
 }
 
 element-icon {
-    size: 0px;
+  size:             0px;
 }
