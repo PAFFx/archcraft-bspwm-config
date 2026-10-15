@@ -1,0 +1,35 @@
+# Packages this config uses beyond archcraft-bspwm's own dependencies.
+# Install all: sudo pacman -S --needed $(grep -v '^#' ~/.config/bspwm/packages.txt)
+# bspupdate warns about anything missing from this list.
+
+# core session
+archcraft-bspwm
+alacritty
+picom
+ksuperkey
+xfce4-power-manager
+xorg-xsetroot
+nitrogen
+feh
+
+# polybar modules
+acpi
+upower
+networkmanager
+networkmanager-dmenu-git
+
+# rofi_music (super + m)
+playerctl
+curl
+wmctrl
+
+# screenshots / color picker / lock
+maim
+xclip
+xdotool
+betterlockscreen
+
+# music (ctrl + alt + m)
+mpd
+mpc
+ncmpcpp

@@ -14,7 +14,12 @@ Control="spotify"
 missing=()
 for dep in playerctl curl wmctrl; do command -v "$dep" >/dev/null || missing+=("$dep"); done
 if ((${#missing[@]})); then
-	notify-send -u critical "rofi_music: missing dependencies" "sudo pacman -S ${missing[*]}"
+	# Click the notification to install in a floating terminal (pacman asks for your password)
+	(
+		[[ $(dunstify -u critical -A install,Install "rofi_music: missing ${missing[*]}" "Click to install") == install ]] &&
+			alacritty --class 'alacritty-float,alacritty-float' -e sh -c \
+				"sudo pacman -S --needed ${missing[*]}; printf '\nPress Enter to close'; read _"
+	) &
 	exit 1
 fi
 

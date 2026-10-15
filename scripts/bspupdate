@@ -20,5 +20,9 @@ rsync -a --delete --exclude .git "$SRC"/ "$WT"/
 git -C "$WT" add -A
 git -C "$WT" commit -qm "upstream: archcraft-bspwm $VER" >/dev/null || echo "upstream branch already at $VER"
 
+# Warn about packages from packages.txt that aren't installed
+missing=$(pacman -T $(grep -v -e '^#' -e '^$' packages.txt) || true)
+[[ -z $missing ]] || echo "Missing packages: sudo pacman -S --needed $(echo $missing)"
+
 git merge --no-ff upstream -m "merge: upstream archcraft-bspwm $VER" \
 	|| { echo; echo "Resolve conflicts above, then: git commit"; exit 1; }
