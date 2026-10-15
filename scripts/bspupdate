@@ -18,7 +18,7 @@ trap 'git worktree remove --force "$WT"' EXIT
 
 rsync -a --delete --exclude .git "$SRC"/ "$WT"/
 git -C "$WT" add -A
-git -C "$WT" commit -qm "upstream: archcraft-bspwm $VER" || echo "upstream branch already at $VER"
+git -C "$WT" commit -qm "upstream: archcraft-bspwm $VER" >/dev/null || echo "upstream branch already at $VER"
 
 git merge --no-ff upstream -m "merge: upstream archcraft-bspwm $VER" \
 	|| { echo; echo "Resolve conflicts above, then: git commit"; exit 1; }
