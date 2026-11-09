@@ -23,6 +23,9 @@ playerctl
 curl
 wmctrl
 
+# rofi_kaomoji (super + e)
+noto-fonts-cjk
+
 # screenshots / color picker / lock
 maim
 xclip

@@ -1,0 +1,588 @@
+#!/usr/bin/env bash
+
+## Kaomoji picker: types the selection into the focused window and copies it.
+
+DIR="$HOME/.config/bspwm"
+RASI="$DIR/themes/adaptive/rofi/kaomoji.rasi"
+RECENT="${XDG_CACHE_HOME:-$HOME/.cache}/rofi_kaomoji_recent"
+MAX_RECENT=12
+
+# "<tags> <kaomoji>" — tags are comma-separated, no spaces; the rest of the line is the kaomoji
+read -r -d '' LIST <<'EOF'
+happy,smile (＾▽＾)
+happy,smile (◕‿◕)
+happy,smile (｡◕‿◕｡)
+happy,smile (´▽`)
+happy,smile (＾◡＾)
+happy,smile ٩(◕‿◕｡)۶
+happy,smile ヽ(・∀・)ﾉ
+happy,smile (✿◠‿◠)
+happy,smile (*^‿^*)
+happy,smile ( ´ ∀ ` )
+happy,joy,yay ＼(＾▽＾)／
+happy,joy,yay ヽ(＾Д＾)ﾉ
+happy,joy,yay \(^o^)/
+happy,joy,yay ٩(ˊᗜˋ*)و
+happy,joy,yay (ﾉ◕ヮ◕)ﾉ*:･ﾟ✧
+happy,joy,yay ✧*｡٩(ˊᗜˋ*)و✧*｡
+happy,joy,yay (☆▽☆)
+happy,joy,yay (≧▽≦)
+happy,joy,yay o(≧▽≦)o
+happy,joy,dance ♪(´▽｀)
+happy,joy,dance ヾ(⌐■_■)ノ♪
+happy,joy,dance ┌(・。・)┘♪
+cool,smug (⌐■_■)
+cool,smug ( ͡° ͜ʖ ͡°)
+cool,smug (￣ー￣)
+cool,smug ( ˘▽˘)っ♨
+love,heart (♡˙︶˙♡)
+love,heart (´∀`)♡
+love,heart (◍•ᴗ•◍)❤
+love,heart (｡♥‿♥｡)
+love,heart (≧◡≦) ♡
+love,heart ♡(ӦｖӦ｡)
+love,heart (っ˘з(˘⌣˘ ) ♡
+love,kiss (*˘︶˘*).｡.:*♡
+love,kiss ( ˘ ³˘)♥
+love,hug (っ´▽`)っ
+love,hug ⊂(・▽・⊂)
+love,hug (づ｡◕‿‿◕｡)づ
+love,hug ༼ つ ◕_◕ ༽つ
+shy,blush (⁄ ⁄•⁄ω⁄•⁄ ⁄)
+shy,blush (*/ω＼)
+shy,blush (〃▽〃)
+shy,blush (//▽//)
+shy,blush (,,>﹏<,,)
+sad,cry (╥﹏╥)
+sad,cry (ಥ﹏ಥ)
+sad,cry (T_T)
+sad,cry (；へ：)
+sad,cry (´；ω；`)
+sad,cry ｡ﾟ(ﾟ´Д｀ﾟ)ﾟ｡
+sad,cry (っ˘̩╭╮˘̩)っ
+sad (´・ω・`)
+sad (◞‸◟)
+sad (｡•́︿•̀｡)
+sad (っ- ‸ – ς)
+angry,mad (╬ Ò﹏Ó)
+angry,mad (ノಠ益ಠ)ノ
+angry,mad (＃`Д´)
+angry,mad ヽ(`⌒´メ)ノ
+angry,mad (눈_눈)
+angry,mad ಠ_ಠ
+angry,mad (￣^￣)
+angry,pout (｀ε´)
+tableflip,angry (╯°□°)╯︵ ┻━┻
+tableflip,angry (ノಠ益ಠ)ノ彡┻━┻
+tableflip,angry ┻━┻ ︵ヽ(`Д´)ﾉ︵ ┻━┻
+tableflip,calm ┬─┬ノ( º _ ºノ)
+surprised,shock (⊙_⊙)
+surprised,shock (°ロ°)
+surprised,shock Σ(°△°|||)
+surprised,shock (ﾟДﾟ;)
+surprised,shock w(°ｏ°)w
+surprised,shock (O_O)
+confused,huh (・・?)
+confused,huh (￣ω￣;)
+confused,huh ┐(´ー｀)┌
+confused,huh (⊙.☉)7
+shrug ¯\_(ツ)_/¯
+shrug ┐(￣ヘ￣)┌
+shrug ╮(￣～￣)╭
+shrug ヽ(ー_ー )ノ
+nervous,sweat (^_^;)
+nervous,sweat (￣▽￣;)
+nervous,sweat (・_・;)
+nervous,sweat (；・∀・)
+tired,sleep (－_－) zzZ
+tired,sleep (∪｡∪)｡｡｡zzZ
+tired,sleep (￣o￣) zzZZzzZZ
+tired,sleep (=_=)
+wink (^_~)
+wink (゜ω゜)b
+wink ☆⌒(ゝ。∂)
+thumbsup,ok d(￣◇￣)b
+thumbsup,ok (b ᵔ▽ᵔ)b
+thumbsup,ok ( •̀ ω •́ )✧
+greet,wave,hi (^０^)ノ
+greet,wave,hi ( ´ ▽ ` )ﾉ
+greet,wave,hi (*・ω・)ﾉ
+greet,wave,bye (￣▽￣)ノ
+greet,bow m(_ _)m
+greet,bow <(_ _)>
+sorry,bow (シ_ _)シ
+eat,food (っ˘ڡ˘ς)
+eat,food ( ˘▽˘)っ♨
+eat,food (*´ڡ`●)
+music,sing ♪～(￣ε￣)
+music,sing (￣▽￣)/♫•*¨*•.¸¸♪
+run,go ε=ε=┌( >_<)┘
+run,go ┗(＾0＾)┓
+think (￢_￢)
+think (￣～￣;)
+think (・ิω・ิ)
+cat,animal (=^･ω･^=)
+cat,animal (=①ω①=)
+cat,animal ฅ^•ﻌ•^ฅ
+cat,animal (=ↀωↀ=)
+dog,animal ∪＾ェ＾∪
+dog,animal U^ｪ^U
+bear,animal ʕ•ᴥ•ʔ
+bear,animal ʕ •́؈•̀ ₎
+bear,animal ʕ￫ᴥ￩ʔ
+rabbit,animal ／(≧ x ≦)＼
+fish,animal >゜))))彡
+bird,animal (ㆆᴗㆆ)
+pig,animal ( ´(00)`)
+fight,punch (ง •̀_•́)ง
+fight,punch (ง'̀-'́)ง
+fight,punch ᕦ(ò_óˇ)ᕤ
+magic,sparkle (∩^o^)⊃━☆ﾟ.*･｡ﾟ
+magic,sparkle (ﾉ>ω<)ﾉ :｡･:*:･ﾟ’★
+lenny,meme ( ͡° ͜ʖ ͡°)
+lenny,meme ( ͠° ͟ʖ ͡°)
+lenny,meme ಠ‿ಠ
+lenny,meme (☞ﾟヮﾟ)☞
+lenny,meme ☜(ﾟヮﾟ☜)
+happy,smile (ᵔᴥᵔ)
+happy,smile (｡•̀ᴗ-)✧
+happy,smile (￣▽￣)
+happy,smile (・▽・)
+happy,smile (*´▽`*)
+happy,smile (o^▽^o)
+happy,smile ( ˙꒳​˙ )
+happy,smile (*＾ω＾)
+happy,smile (◠‿◠)
+happy,smile (´｡• ᵕ •｡`)
+happy,joy,yay ヽ(°〇°)ﾉ
+happy,joy,yay ヽ(>∀<☆)ノ
+happy,joy,yay (ﾉ´ヮ`)ﾉ*: ･ﾟ
+happy,joy,yay ٩(｡•́‿•̀｡)۶
+happy,joy,yay ＼(★ω★)／
+happy,joy,yay ヾ(＾∇＾)
+happy,joy,yay (((o(*ﾟ▽ﾟ*)o)))
+happy,joy,yay ヽ(*⌒▽⌒*)ﾉ
+laugh,lol (≧∇≦)ﾉ
+laugh,lol (*≧▽≦)ﾉｼ))
+laugh,lol (ﾉ≧∀≦)ﾉ
+laugh,lol ( ≧Д≦)
+laugh,lol (￣▽￣)ノ”
+laugh,lol 〜(꒪꒳꒪)〜
+cute,uwu (◕ᴗ◕✿)
+cute,uwu (｡･ω･｡)
+cute,uwu (˶ᵔ ᵕ ᵔ˶)
+cute,uwu (っ◔◡◔)っ ♥
+cute,uwu ( ◡‿◡ *)
+cute,uwu (*ฅ́˘ฅ̀*)
+cute,uwu (U ᵕ U❁)
+cute,uwu (⁎˃ᴗ˂⁎)
+cute,uwu ૮ ˶ᵔ ᵕ ᵔ˶ ა
+cute,uwu ( ˘ω˘ )
+cute,uwu (◍＞◡＜◍)
+cute,uwu (｡>﹏<｡)
+love,heart (ɔˆ ³(ˆ⌣ˆc)
+love,heart ♡＾▽＾♡
+love,heart (♡μ_μ)
+love,heart (´ε｀ )♡
+love,heart (ღ˘⌣˘ღ)
+love,heart ( ◜‿◝ )♡
+love,heart (˘∀˘)/(μ‿μ) ❤
+love,heart ❤ (ɔˆз(ˆ⌣ˆc)
+love,heart (°◡°♡)
+love,heart ♡( ◡‿◡ )
+love,hug (つ≧▽≦)つ
+love,hug (っ ᵔ◡ᵔ)っ
+love,hug (⊃｡•́‿•̀｡)⊃
+love,hug (づ￣ ³￣)づ
+love,hug (ﾉ´ з `)ノ
+love,hug ヽ(^Д^)ﾉ ヽ(*^∇^*)ﾉ
+pat,headpat (ｏ・_・)ノ”(ᴗ_ ᴗ。)
+pat,headpat (ノ_<。)ヾ(´ ▽ ` )
+shy,blush (⁄ ⁄>⁄ ▽ ⁄<⁄ ⁄)
+shy,blush (≧◡≦)
+shy,blush (o^ ^o)
+shy,blush (*ﾉωﾉ)
+shy,blush („ಡωಡ„)
+shy,blush (ᵕ—ᴗ—)
+shy,blush (/▿＼ )
+peek,hide |ω･)
+peek,hide |･ω･)ﾉ
+peek,hide ┬┴┬┴┤(･_├┬┴┬┴
+peek,hide |д･)
+peek,hide (/ω＼)
+peek,hide ┬┴┬┴┤ω･)ﾉ
+sad,cry (ノ_<。)
+sad,cry (ToT)
+sad,cry (༎ຶ⌑༎ຶ)
+sad,cry (ಡ‸ಡ)
+sad,cry (｡╯︵╰｡)
+sad,cry ｡゜゜(´Ｏ`) ゜゜｡
+sad,cry ( ╥ω╥ )
+sad,cry (个_个)
+sad,cry (┳Д┳)
+sad (´-ω-`)
+sad (ー_ー゛)
+sad (´°︿°`)
+sad (︶︹︺)
+sad,lonely (。┰ω┰。)
+sad,depressed _(:3 」∠)_
+sad,depressed orz
+sad,depressed ○| ̄|＿
+angry,mad (ꐦ°᷄д°᷅)
+angry,mad ٩(╬ʘ益ʘ╬)۶
+angry,mad (≖､≖╬)
+angry,mad (ᗒᗣᗕ)՞
+angry,mad ヽ( `д´*)ノ
+angry,mad (╬ಠ益ಠ)
+angry,mad 凸(￣ヘ￣)
+angry,mad (‡▼益▼)
+angry,mad (・`ω´・)
+angry,pout (￣ε￣＠)
+angry,pout (｀Д´)
+tableflip,angry (┛◉Д◉)┛彡┻━┻
+tableflip,angry (ﾉ｀Д´)ﾉ彡┻━┻
+tableflip,angry ┻━┻ ︵ ¯\(ツ)/¯ ︵ ┻━┻
+tableflip,angry (┛ಠ_ಠ)┛彡┻━┻
+tableflip,angry (ノ°益°)ノ 彡 ┻━┻
+tableflip,calm ┬─┬ ¯\_(ツ)
+tableflip,calm ┬──┬◡ﾉ(° -°ﾉ)
+scared,fear (ﾉωヽ)
+scared,fear (/ω＼)
+scared,fear ((( ;°Д°)))
+scared,fear 〜(＞＜)〜
+scared,fear Σ(ﾟロﾟ)
+scared,fear (;;;*_*)
+scared,fear (ノдヽ)
+surprised,shock (ﾟoﾟ)
+surprised,shock ∑(O_O；)
+surprised,shock (〇o〇)
+surprised,shock (⊙ω⊙)
+surprised,shock (◎_◎;)
+surprised,shock щ(゜ロ゜щ)
+surprised,shock ヽ(°〇°)ﾉ
+confused,huh (￣ヘ￣)
+confused,huh (・_・ヾ
+confused,huh ( ˘･з･)
+confused,huh (◎ ◎)ゞ
+confused,huh ʅ(°_°)ʃ
+confused,huh (゜-゜)
+confused,huh ¿ⓧ_ⓧﮌ
+shrug ┐(︶▽︶)┌
+shrug ┐(‘～`;)┌
+shrug ¯\_( ͡° ͜ʖ ͡°)_/¯
+shrug ヽ(￣～￣ )ノ
+shrug ╮(︶︿︶)╭
+nervous,sweat (^▽^;)
+nervous,sweat (⌒_⌒;)
+nervous,sweat (゜▽゜;)
+nervous,sweat (￣ω￣;)
+nervous,sweat (°ー°〃)
+bored,meh (￣_￣)
+bored,meh (－‸ლ)
+bored,meh (ー_ー)!!
+bored,meh (－－〆)
+bored,meh ( ･ั﹏･ั)
+tired,sleep (。-ω-)zzz
+tired,sleep (－ω－) zzZ
+tired,sleep (ᴗ˳ᴗ)
+tired,sleep ( ˘ω˘ ) ｽﾔｧ…
+tired,sleep [(－－)]..zzZ
+tired,sleep (⇀‸↼‶)
+dizzy,dead (×_×)
+dizzy,dead (x_x)
+dizzy,dead (@_@)
+dizzy,dead (✖╭╮✖)
+dizzy,dead (+_+)
+dizzy,dead _:(´ཀ`」 ∠):_
+sick,ill (´＿｀。)
+sick,ill (っ´ω`c)
+sick,ill ( ´_ゝ`)
+evil,smug (｀∀´)Ψ
+evil,smug ψ(｀∇´)ψ
+evil,smug ( ͡° ᴥ ͡°)
+evil,smug (¬‿¬)
+evil,smug (￢‿￢ )
+evil,smug (◣_◢)
+evil,smug ٩(ఠ益ఠ)۶
+evil,smug ಠ◡ಠ
+cool,smug (•_•) ( •_•)>⌐■-■ (⌐■_■)
+cool,smug ( •_•)>⌐■-■
+cool,smug (▀̿Ĺ̯▀̿ ̿)
+cool,smug ┏(-_-)┛
+determined,fight (๑•̀ㅂ•́)و✧
+determined,fight ٩(ˊᗜˋ)و
+determined,fight (ง ื▿ ื)ว
+determined,fight (ﾒ` ﾛ ´)︻デ═一
+determined,fight (˼●̙̂ ̟ ̟̎ ̟ ̘●̂˻)
+fight,punch (ノ•̀ o •́ )ノ ~ ┻━┻
+fight,punch ━╤デ╦︻(▀̿̿Ĺ̯̿̿▀̿ ̿)
+fight,punch (ﾒ￣▽￣)︻┳═一
+fight,sword ( ・∀・)・・・--------☆
+fight,sword (∩` ﾛ ´)⊃━炎炎炎炎炎
+flex,strong ᕙ(⇀‸↼‶)ᕗ
+flex,strong ᕦ(ò_óˇ)ᕤ
+flex,strong ᕙ( •̀ ᗜ •́ )ᕗ
+flex,strong (ง •̀ゝ•́)ง
+salute (｀・ω・´)ゞ
+salute (￣^￣)ゞ
+salute ( ･ิω･ิ)ゞ
+thumbsup,ok (๑˃ᴗ˂)ﻭ
+thumbsup,ok ( ˘ ▽˘)っ♨
+thumbsup,ok b(￣▽￣)d
+thumbsup,ok (・∀・)b
+thumbsup,ok ( ´ ▽ ` )b
+greet,wave,hi (・ω・)ノ
+greet,wave,hi ヾ(・ω・*)
+greet,wave,hi ( ´ ∀ ` )ノ～ ♡
+greet,wave,hi (o´▽`o)ﾉ
+greet,wave,bye (^-^*)/
+greet,wave,bye (￣▽￣)/
+greet,wave,bye ヾ(￣▽￣) Bye~Bye~
+greet,bow (ㅅ´ ˘ `)
+sorry,bow m(｡≧ｴ≦｡)m
+sorry,bow (人 •͈ᴗ•͈)
+thanks,please (人´∀`)
+thanks,please (*´人`*)
+thanks,please (ㅅ•᎑•)
+celebrate,party ＼(＾O＾)／
+celebrate,party ヽ(゜∇゜)ノ
+celebrate,party (ﾉ^ヮ^)ﾉ*:・ﾟ✧
+celebrate,party ✧٩(•́⌄•́๑)و ✧
+celebrate,party ＼(^▽^)／☆*:・ﾟ
+celebrate,party ☆*:.｡.o(≧▽≦)o.｡.:*☆
+cheers,drink (^_^)／□☆□＼(^_^)
+cheers,drink (＾▽＾)っ□
+cheers,drink ( ﾟ▽ﾟ)/c[_]
+cheers,drink ( ˘▽˘)っ旦
+eat,food ( ˘▽˘)っ▲
+eat,food (っ´ω`)ﾉ(╥ω╥)
+eat,food (*´▽`)ﾉ 食
+eat,food (*´▽`)ノ—●●●
+eat,food ( ・ω・)o-{{[〃]}}
+money,rich [̲̅$̲̅(̲̅ ͡° ͜ʖ ͡°̲̅)̲̅$̲̅]
+money,rich (￣∀￣)$
+money,rich ($_$)
+music,sing ヾ(´〇`)ﾉ♪♪♪
+music,sing ♪┏(・o･)┛♪┗ ( ･o･) ┓♪
+music,sing (～￣▽￣)～
+music,sing ♬♩♪♩( ◜◒◝ )♩♪♩♬
+run,go ε=┌( ・_・)┘
+run,go ┏( ^o^)┛ ┏(^o^ )┛
+run,go ヽ(￣д￣;)ノ=3=3=3
+run,go ε=ε=(ノ≧∇≦)ノ
+writing,work __φ(．．)
+writing,work φ(゜▽゜*)♪
+writing,work ( ￣ー￣)φ__
+writing,work ⌨(°ロ°;)
+think (￣ω￣)
+think (⊙_☉)
+think ( ´-ω･)︻┻┳══━一
+think (｀_´)ゞ
+think (￢､￢)
+star,sparkle ☆ﾟ.*･｡ﾟ
+star,sparkle ✧･ﾟ: *✧･ﾟ:*
+star,sparkle ・ﾟ✧*:･ﾟ✧
+star,sparkle (∗ ･‿･)ﾉ゛
+magic,sparkle (ﾉ´ヮ`)ﾉ*: ･ﾟ✧
+magic,sparkle (っ・ω・)っ≡≡≡≡≡≡☆
+magic,sparkle ( ´ ▽ ` ).｡ｏ♡
+weather,rain ヽ(°□° )ノ ☂
+weather,rain ( ´_ゝ`)☂
+weather,sun ☀ ヽ(✿ﾟ▽ﾟ)ノ
+weather,snow ⛄ (＾◡＾)
+flower ✿(◕‿◕)✿
+flower (◕‿◕✿)
+flower ❀ ✿(ᵔ‿ᵔ)✿ ❀
+peace (￣▽￣)ｖ
+peace (＾▽＾)v
+peace ✌(-‿-)✌
+peace (‾◡◝)✌
+cat,animal (^・ω・^ )
+cat,animal (=ﾟωﾟ)ﾉ
+cat,animal (ฅ'ω'ฅ)
+cat,animal ₍^ >ヮ<^₎
+cat,animal (˵ •̀ ᴗ - ˵ ) ✧
+cat,animal ≽^•⩊•^≼
+cat,animal /ᐠ｡ꞈ｡ᐟ\
+dog,animal ▼・ᴥ・▼
+dog,animal (ᵔᴥᵔ)
+dog,animal V●ᴥ●V
+dog,animal ૮ ・ﻌ・ა
+bear,animal ʕ ꈍᴥꈍʔ
+bear,animal ʕっ•ᴥ•ʔっ
+bear,animal ʕ•̀ω•́ʔ✧
+bear,animal ʕ ´•̀ᴥ•́`ʔ
+rabbit,animal ⊂(￣(ｴ)￣)⊃
+rabbit,animal (\_/)( •_•)/ >✿
+rabbit,animal (・x・)
+rabbit,animal ( ◞･ω･)◞
+bird,animal ( ・θ・)
+bird,animal (・θ・)
+bird,animal ◉ө◉
+pig,animal (￣(oo)￣)
+fish,animal ><(((('>
+fish,animal ><>
+spider,animal /╲/\╭(ఠఠ益ఠఠ)╮/\╱\
+snail,animal @__(._.)
+mouse,animal ~(=^‥^)
+worm,animal ~~>_<~~
+lenny,meme ( ͡ᵔ ͜ʖ ͡ᵔ)
+lenny,meme ( ͡~ ͜ʖ ͡°)
+lenny,meme (ಠ ͜ʖ ಠ)
+lenny,meme ( ͡ಥ ͜ʖ ͡ಥ)
+lenny,meme ( ͡°( ͡° ͜ʖ( ͡° ͜ʖ ͡°)ʖ ͡°) ͡°)
+lenny,meme ᕕ( ᐛ )ᕗ
+lenny,meme (☞ ͡° ͜ʖ ͡°)☞
+lenny,meme ( ･_･)♡
+disapproval,meme ಠ_ಠ
+disapproval,meme (ಠ_ಠ)>⌐■-■
+disapproval,meme ლ(ಠ益ಠლ)
+disapproval,meme (；一_一)
+facepalm (－‸ლ)
+facepalm (ლ‸－)
+facepalm (>ლ)
+EOF
+
+# "<tag> <extra search words>" — every kaomoji with that tag is also found by these words
+read -r -d '' SYNONYMS <<'EOF'
+happy glad,cheerful,pleased,content,good,nice
+smile grin,smiling,smiley
+joy excited,hooray,woohoo,cheer,yippee,glee
+yay hooray,woohoo,excited
+dance dancing,groove,boogie,party
+cool sunglasses,chill,swag,deal
+smug smirk,proud,heh,cocky
+love like,crush,adore,affection,romance,valentine
+heart love,valentine,care
+kiss smooch,mwah,chu
+hug cuddle,embrace,squeeze,comfort
+shy embarrassed,timid,flustered,awkward
+blush embarrassed,flustered,red,bashful
+sad unhappy,down,upset,sorrow,gloomy,disappointed
+cry tears,crying,sob,weep,bawl
+angry rage,furious,annoyed,grr,hate,upset
+mad rage,furious,annoyed
+pout sulk,hmph,grumpy,huff
+tableflip flip,table,fliptable,rage,done
+calm unflip,putback,relax,fine
+surprised wow,omg,gasp,whoa,amazed
+shock wow,omg,gasp,shocked,whoa
+confused what,question,puzzled,lost,idk
+huh what,eh,question
+shrug idk,whatever,dunno,meh,oh,well
+nervous awkward,anxious,worried,uh,oops,yikes
+sweat awkward,uh,oops,phew
+tired exhausted,sleepy,yawn,drained
+sleep zzz,sleepy,nap,goodnight,night,rest
+wink flirt,tease,hehe
+thumbsup good,nice,approve,yes,great,gj,goodjob
+ok okay,good,yes,fine,alright
+greet hello,hey,yo,welcome
+wave hello,hey,goodbye
+hi hello,hey,yo,morning,sup
+bye goodbye,cya,later,farewell,seeya
+bow respect,thanks,apologize,dogeza
+sorry apologize,apology,oops,forgive,pardon
+eat hungry,yum,nom,delicious,tasty
+food hungry,yum,nom,meal,snack,lunch,dinner
+music song,melody,note,listen
+sing song,karaoke,singing
+run running,hurry,rush,escape,fast,zoom
+go hurry,leave,move
+think hmm,thinking,wonder,ponder,suspicious,consider
+cat kitty,neko,meow,kitten
+dog puppy,doggo,woof,inu,pup
+bear teddy,kuma
+rabbit bunny,usagi
+fish sea,ocean
+bird chick,tweet,birb
+pig oink,piggy
+mouse rat,squeak
+animal pet,creature
+fight battle,attack,beat
+punch hit,box,boxing
+sword blade,attack,fire
+magic wizard,spell,wand,witch
+sparkle shiny,glitter,twinkle,stars
+star twinkle,shiny,stars
+lenny face,suggestive,sus
+meme funny,lol,joke
+laugh haha,lmao,funny,hehe,rofl,xd
+lol haha,lmao,funny,rofl,xd
+cute kawaii,adorable,aww,sweet
+uwu owo,kawaii,soft
+pat headpat,comfort,there,goodjob
+headpat pat,comfort,there
+peek lurk,spy,watching,stalk,sneak
+hide lurk,shy,hiding
+depressed done,giveup,despair,lying,dead,flop
+lonely alone,solo
+scared afraid,fear,terrified,spooky,horror,eek
+fear afraid,scared,terrified
+bored boring,unamused,whatever,sigh
+meh whatever,unimpressed,sigh
+dizzy dazed,spinning,woozy
+dead rip,ded,ko,done,dying
+sick ill,unwell,flu,cold
+evil devil,villain,mischief,scheme,muahaha
+determined motivated,ganbatte,doit,ready,letsgo,goal
+flex strong,muscle,gym,workout,power,buff
+strong muscle,power,buff
+salute sir,yes,roger,respect,yessir,aye
+thanks thankyou,ty,grateful,appreciate,arigato
+please pray,beg,wish,hope,pls
+celebrate congrats,congratulations,birthday,hooray,win,yay
+party celebration,fun,birthday
+cheers toast,kampai,beer,drink
+drink beer,tea,coffee,cup,toast
+money cash,rich,dollar,pay,paid
+writing write,note,study,homework,notes
+work busy,typing,coding,office,job,study
+weather rain,sun,snow,umbrella,storm
+flower blossom,spring,sakura,pretty,bloom
+peace victory,v,yeah,peacesign
+facepalm ugh,stupid,disappointed,smh,why
+disapproval stare,judging,unimpressed,look,glare
+EOF
+
+mkdir -p "${RECENT%/*}"
+touch "$RECENT"
+
+# Recents first (keeping their tags), then the rest. Piped directly: NUL bytes can't live in a bash var.
+pick=$(awk -v recent_file="$RECENT" -v synonyms="$SYNONYMS" '
+	BEGIN {
+		n = split(synonyms, lines, "\n")
+		for (i = 1; i <= n; i++) {
+			split(lines[i], f, " ")
+			syn[f[1]] = f[2]
+		}
+		while ((getline line < recent_file) > 0)
+			if (line != "" && !(line in rank)) { rank[line] = ++nrecent; recent[nrecent] = line }
+	}
+	{
+		k = substr($0, length($1) + 2)
+		if (k in meta) next
+		nt = split($1, t, ",")
+		words = $1
+		for (i = 1; i <= nt; i++) if (t[i] in syn) words = words "," syn[t[i]]
+		meta[k] = words
+		order[++count] = k
+	}
+	END {
+		for (i = 1; i <= nrecent; i++)
+			if (recent[i] in meta) printf "%s\0meta\037recent,%s\n", recent[i], meta[recent[i]]
+		for (i = 1; i <= count; i++)
+			if (!(order[i] in rank)) printf "%s\0meta\037%s\n", order[i], meta[order[i]]
+	}
+' <<< "$LIST" | rofi -dmenu -i -p "" -theme "$RASI")
+[[ -z "$pick" ]] && exit 0
+
+printf '%s' "$pick" | xclip -selection clipboard &
+
+# Give focus a moment to return to the previous window
+sleep 0.04
+# Default per-char delay is 12ms; 1ms keeps it reliable for remapped unicode keys
+xdotool type --clearmodifiers --delay 1 -- "$pick"
+
+{ printf '%s\n' "$pick"; grep -vxF -- "$pick" "$RECENT"; } | head -n "$MAX_RECENT" > "$RECENT.tmp" \
+	&& mv "$RECENT.tmp" "$RECENT"

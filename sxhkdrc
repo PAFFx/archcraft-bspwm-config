@@ -30,6 +30,10 @@ alt + F2
 super + {b,m,n,r,s,t,w,x}
 	{rofi_bluetooth,rofi_music,network_menu,rofi_asroot,rofi_screenshot,rofi_themes,rofi_windows,rofi_powermenu}
 
+# Kaomoji picker (types + copies)
+super + e
+	rofi_kaomoji
+
 ##---------- Applications ----------##
 
 # Launch Apps
